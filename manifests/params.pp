@@ -1,5 +1,6 @@
 # The foreman default parameters
 class foreman_ipa::params {
-  # User that is used for ...
-  $user = 'root'
+  $admin = 'admin'
+  $keytab = "/etc/httpd/conf/http.keytab"
+  $pam_service = 'foreman'
 }

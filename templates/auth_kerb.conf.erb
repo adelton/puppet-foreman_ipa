@@ -1,0 +1,47 @@
+#
+# The mod_auth_kerb module implements Kerberos authentication over
+# HTTP, following the "Negotiate" protocol.
+#
+
+LoadModule auth_kerb_module modules/mod_auth_kerb.so
+
+#
+# Sample configuration: Kerberos authentication must only be
+# used over SSL to prevent replay attacks.  The keytab file
+# configured must be readable only by the "apache" user, and
+# must contain service keys for "HTTP/www.example.com", where
+# "www.example.com" is the FQDN of this server.
+#
+
+#<Location /private>
+#  SSLRequireSSL
+#  AuthType Kerberos
+#  AuthName "Kerberos Login"
+#  KrbMethodNegotiate On
+#  KrbMethodK5Passwd Off
+#  KrbAuthRealms EXAMPLE.COM
+#  Krb5KeyTab /etc/httpd/conf/keytab
+#  require valid-user
+#</Location>
+
+<IfModule !auth_kerb_module>
+  LoadModule auth_kerb_module modules/mod_auth_kerb.so
+</IfModule>
+<IfModule !authnz_pam_module>
+  LoadModule authnz_pam_module modules/mod_authnz_pam.so
+</IfModule>
+<Location /users/extlogin>
+  SSLRequireSSL
+  AuthType Kerberos
+  AuthName "Kerberos Login"
+  KrbMethodNegotiate On
+  KrbMethodK5Passwd Off
+  KrbAuthRealms <%= default_ipa_realm %>
+  Krb5KeyTab <%= keytab %>
+  KrbLocalUserMapping On
+  # require valid-user
+  require pam-account <%= pam_service %>
+  ErrorDocument 401 '<html><meta http-equiv="refresh" content="0; URL=/users/login"><body>Kerberos authentication did not pass.</body></html>'
+  # The following is needed as a workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1020087
+  ErrorDocument 500 '<html><meta http-equiv="refresh" content="0; URL=/users/login"><body>Kerberos authentication did not pass.</body></html>'
+</Location>

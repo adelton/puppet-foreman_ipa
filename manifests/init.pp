@@ -2,14 +2,18 @@
 #
 # === Parameters:
 #
-# $user::            Desired user name
+# $keytab::          Kerberos keytab file
+# $pam_service::     PAM service to use/configure
 #
 class foreman_ipa ( 
-  $user = $foreman_ipa::params::user,
+  $keytab = $foreman_ipa::params::keytab,
+  $pam_service = $foreman_ipa::params::pam_service,
 ) inherits foreman_ipa::params {
 
-  # do something, like instantiate traditional classes
-  # class { 'foreman_ipa::install': } ~>
-  # class { 'foreman_ipa::config': } ~>
+  class { 'foreman_ipa::install': } ~>
+  class { 'foreman_ipa::config': } ~>
   # class { 'foreman_ipa::service: }
+  Class['foreman_ipa']
+
 }
+# $user::            Desired user name
