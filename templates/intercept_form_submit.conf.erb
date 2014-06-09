@@ -15,7 +15,7 @@
   LoadModule authnz_pam_module modules/mod_authnz_pam.so
 </IfModule>
 <Location /users/login>
-  InterceptFormPAMService <%= pam_service %>
+  InterceptFormPAMService <%= @pam_service %>
   InterceptFormLogin login[login]
   InterceptFormPassword login[password]
 </Location>
