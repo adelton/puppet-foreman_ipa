@@ -6,5 +6,3 @@ license 'GPLv3+'
 summary 'Foreman IPA integration'
 description 'Module for configuring Foreman and IPA client to enable SSO and external user management'
 project_page 'http://github.com/theforeman/foreman-installer'
-
-dependency 'stbenjam/ipaclient', '>= 2.2.1'
