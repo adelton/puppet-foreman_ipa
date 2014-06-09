@@ -1,4 +1,4 @@
-class foreman_ipa::install {
+class foreman_ipa::install ($custom_repo = $::foreman_ipa::custom_repo) {
   if $custom_repo {
     yumrepo { 'adelton-identity':
       enabled  => 1,
