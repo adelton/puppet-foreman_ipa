@@ -32,7 +32,11 @@ class foreman_ipa::config {
   }
 
   exec { 'ipa-getkeytab':
-    command => "/usr/sbin/ipa-getkeytab -s ${::default_ipa_server} -k $foreman_ipa::keytab -p HTTP/${::fqdn}",
+    onlyif  => "/usr/bin/test -x /usr/sbin/ipa-getkeytab || /usr/bin/yum install -y /usr/sbin/ipa-getkeytab",
+    command => "/bin/echo Get keytab \
+      && KRB5CCNAME=KEYRING:session:get-http-service-keytab kinit -k \
+      && KRB5CCNAME=KEYRING:session:get-http-service-keytab /usr/sbin/ipa-getkeytab -s ${::default_ipa_server} -k $foreman_ipa::keytab -p HTTP/${::fqdn} \
+      && kdestroy -c KEYRING:session:get-http-service-keytab",
     creates => $foreman_ipa::keytab,
     before  => File[$foreman_ipa::keytab],
   }
