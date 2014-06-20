@@ -1,8 +1,8 @@
 class foreman_ipa::config {
 
-  exec { 'setsebool allow_httpd_mod_auth_pam':
-    command => "/usr/sbin/setsebool -P allow_httpd_mod_auth_pam on",
-    unless  => "/usr/sbin/getsebool allow_httpd_mod_auth_pam | grep 'on$'",
+  selboolean { 'allow_httpd_mod_auth_pam':
+    persistent => true,
+    value      => 'on',
   }
 
   exec { 'setsebool httpd_dbus_sssd':
